@@ -36,7 +36,7 @@ const handler = async (req : NextApiRequest, res : NextApiResponse<DefaultMessag
         const turma = classes[divisorTurma];
 
         const paymentType = randomPayment === 0 ? 'CREDIT' : randomPayment === 1 ? 'SLIP' : 'PIX';
-        const planType = randomPlan === 0 ? 'ADVANCED' : 'EXCLUSIVE';
+        const planType = randomPlan === 1 ? 'ADVANCED' : 'EXCLUSIVE';
         const lastBill = paymentType === 'SLIP' ? moment(turma.start).add(randomBill, 'M').toString() : null ;
         const lastNotification = lastBill ? moment(lastBill).add(randomNotification, 'd').toString() : null;
         const lastSchedule = planType === 'ADVANCED' ? 'M'+randomScheduleAdvanced + 'S'+ randomScheduleExclusive : 'S'+randomScheduleExclusive;
