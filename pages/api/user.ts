@@ -3,8 +3,6 @@ import { DefaultMessageResponse } from './../../types/DefaultMessageResponse';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { jwtValidator } from '@/middlewares/jwtValidator';
 import { verifyAdminUser } from '@/middlewares/adminRoutes';
-import moment from 'moment';
-import { ClassUserModel } from '@/models/ClassUser';
 import { UserModel } from '@/models/User';
 
 

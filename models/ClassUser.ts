@@ -7,6 +7,7 @@ const ClassUserSchema = new Schema({
     paymentType: {type: String, required: true},
     lastBill: {type: Date, required: false},
     lastNotification: {type: Date, required: false},
+    lastLowStatusNotification: {type: Date, required: false},
     lastSchedule: {type: String, required: false},
     currentPercentage: {type: Number, default: 0.0}
 });

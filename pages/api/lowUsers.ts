@@ -5,6 +5,7 @@ import { jwtValidator } from '@/middlewares/jwtValidator';
 import { verifyAdminUser } from '@/middlewares/adminRoutes';
 import moment from 'moment';
 import { ClassUserModel } from '@/models/ClassUser';
+import { ClassModel } from '@/models/Class';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse<DefaultMessageResponse | any>) => {
     try {
@@ -14,36 +15,42 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<DefaultMessageR
 
         const now = moment();
         if (req.method === 'GET') {
-            const debtors = await ClassUserModel.find({
-                paymentType: 'SLIP',
-                lastBill: { $lt: now.toString() },
-                "$or": [{ lastNotification: null }, { lastNotification: { $lt: now.add(-7, 'd') } }]
-            }).populate('user');
+            const students = await ClassUserModel.find({
+                "$or": [
+                    { lastLowStatusNotification: null }, 
+                    {lastLowStatusNotification: { $lt: now.add(-45, 'd')}}
+                ] 
+            }).populate(['user', 'class']);
 
-            const debtorsActive = debtors.filter((d: any) => d.user.isActive);
+            const lowPerformance = students.filter((s:any) => {
+                const percentageAccordingMonth = moment(s.class.start).diff(now, 'M')*8.33;
+                return s.currentPercentage < percentageAccordingMonth;
+            });
 
-            const result = debtorsActive.map((d: any) => {
+            const result = lowPerformance.map((d: any) => {
+                const percentageAccordingMonth = moment(d.class.start).diff(now, 'M')*8.33;
+                
                 return {
                     _id: d._id,
-                    userId: d.user?._id,
                     name: d.user?.name,
                     email: d.user?.email,
-                    lastPaymentDay: moment(d.lastBill).add(30, 'd').format('DD/MM/yyyy')
+                    currentPercentage: d.currentPercentage,
+                    rangePercentage: percentageAccordingMonth
                 }
             })
 
             return res.status(200).json(result);
         } else {
             const { rmId } = req.body;
-            const debtor = await ClassUserModel.findById(rmId);
+            const lowPerformance = await ClassUserModel.findById(rmId);
 
-            if (!debtor) {
+            if (!lowPerformance) {
                 return res.status(400).json({ error: 'Usuário da turma não encontrado' });
             }
 
-            debtor.lastNotification = now;
-            await ClassUserModel.findByIdAndUpdate({ _id: debtor._id }, debtor);
-            return res.status(200).json({ msg: 'Notificação atualizada.' });
+            lowPerformance.lastLowStatusNotification = now;
+            await ClassUserModel.findByIdAndUpdate({ _id: lowPerformance._id }, lowPerformance);
+            return res.status(200).json({ msg: 'Notificação de performance atualizada.' });
         }
     } catch (ex) {
         console.log('Ocorreu erro ao cadastrar turma:', ex);

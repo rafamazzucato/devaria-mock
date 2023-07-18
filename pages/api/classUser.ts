@@ -22,7 +22,7 @@ const handler = async (req : NextApiRequest, res : NextApiResponse<DefaultMessag
         
         const user = await UserModel.findById(userId);
 
-        const classes = await ClassModel.find();0
+        const classes = await ClassModel.find();
 
         const random = Math.floor(Math.random() * 100);
         const randomPercentage = Math.floor(Math.random() * 100);
