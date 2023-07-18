@@ -26,7 +26,7 @@ const handler = async (req : NextApiRequest, res : NextApiResponse<DefaultMessag
 
         const random = Math.floor(Math.random() * 100);
         const randomPercentage = Math.floor(Math.random() * 100);
-        const randomPlan = Math.floor(Math.random() * 1);
+        const randomPlan = Math.floor(Math.random() * 2);
         const randomPayment = Math.floor(Math.random() * 2);
         const randomBill = Math.floor(Math.random() * 4);
         const randomNotification = Math.floor(Math.random() * 45);
