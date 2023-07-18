@@ -41,8 +41,8 @@ const handler = async (req : NextApiRequest, res : NextApiResponse<DefaultMessag
         const lastNotification = lastBill ? moment(lastBill).add(randomNotification, 'd').toString() : null;
         const lastSchedule = planType === 'ADVANCED' ? 'M'+randomScheduleAdvanced + 'S'+ randomScheduleExclusive : 'S'+randomScheduleExclusive;
         const classUser = {
-            userId: user._id,
-            classId: turma._id,
+            user: user,
+            class: turma,
             planType,
             paymentType,
             lastBill,

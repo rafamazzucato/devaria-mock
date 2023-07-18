@@ -1,8 +1,8 @@
 import mongoose, {Schema} from 'mongoose';
 
 const ClassUserSchema = new Schema({
-    userId: {type: mongoose.Schema.Types.ObjectId, required: true},
-    classId: {type: mongoose.Schema.Types.ObjectId, required: true},
+    user: {type: mongoose.Schema.Types.ObjectId, required: true, ref: 'users'},
+    class: {type: mongoose.Schema.Types.ObjectId, required: true, ref: 'classes'},
     planType: {type: String, required: true},
     paymentType: {type: String, required: true},
     lastBill: {type: Date, required: false},
